@@ -7,9 +7,6 @@
 #include "Interfaces/HighlightInterface.h"
 #include "EnemyCharacter.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IHighlightInterface
 {
@@ -18,4 +15,7 @@ class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IHighlightInt
 public:
 	virtual void CreateActorHighlight() override;
 	virtual void RemoveActorHighlight() override;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bHighlighted = false;;
 };

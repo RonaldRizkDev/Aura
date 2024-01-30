@@ -5,10 +5,20 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Interfaces/HighlightInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
+	CurrentActor = nullptr;
 	bReplicates = true;
+	
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -53,5 +63,38 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	{
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+	}
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+
+	if (!CursorHit.bBlockingHit) return;
+
+	IHighlightInterface* LastActor = CurrentActor;
+	CurrentActor = Cast<IHighlightInterface>(CursorHit.GetActor());
+
+	if (LastActor == nullptr)
+	{
+		if (CurrentActor != nullptr)
+		{
+			CurrentActor->CreateActorHighlight();
+		}
+
+		return;
+	}
+
+	if (CurrentActor == nullptr)
+	{
+		LastActor->RemoveActorHighlight();
+		return;
+	}
+
+	if (LastActor != CurrentActor)
+	{
+		CurrentActor->CreateActorHighlight();
+		LastActor->RemoveActorHighlight();
 	}
 }

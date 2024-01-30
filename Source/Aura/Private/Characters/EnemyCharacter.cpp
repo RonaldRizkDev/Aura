@@ -5,8 +5,10 @@
 
 void AEnemyCharacter::CreateActorHighlight()
 {
+	bHighlighted = true;
 }
 
 void AEnemyCharacter::RemoveActorHighlight()
 {
+	bHighlighted = false;
 }
