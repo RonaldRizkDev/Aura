@@ -1,13 +1,20 @@
 // Copyright Silver Desert Software
 
 
-#include "Characters/EnemyCharacter.h"
+#include "..\..\Public\Characters\EnemyCharacter.h"
 
+#include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+
+	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 }
 
 void AEnemyCharacter::CreateActorHighlight()
@@ -32,4 +39,11 @@ void AEnemyCharacter::RemoveActorHighlight()
 	}
 
 	Weapon->SetRenderCustomDepth(false);
+}
+
+void AEnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
