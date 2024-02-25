@@ -20,5 +20,6 @@ public:
 	virtual void RemoveActorHighlight() override;
 
 protected:
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
+	virtual void InitAbilityActorInfo() override;
 };
