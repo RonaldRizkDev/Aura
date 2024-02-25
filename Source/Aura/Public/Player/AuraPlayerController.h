@@ -28,7 +28,7 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
-	IHighlightInterface* CurrentActor;
+	TObjectPtr<IHighlightInterface> CurrentActor;
 	//IHighlightInterface* LastActor;
 
 	UPROPERTY(EditAnywhere, Category="Input")
