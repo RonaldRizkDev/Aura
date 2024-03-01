@@ -7,6 +7,17 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAttributeSet.generated.h"
 
+struct FAuraGameplayTags;
+
+#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
+GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
+template<class T>
+using TStaticFuncPointer = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 USTRUCT()
 struct FEffectCharacterProperties
 {
@@ -36,12 +47,6 @@ struct FEffectProperties
 	FEffectCharacterProperties Target;
 };
 
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
-
 UCLASS()
 class AURA_API UAuraAttributeSet : public UAttributeSet
 {
@@ -52,6 +57,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	TMap<FGameplayTag, TStaticFuncPointer<FGameplayAttribute()>> TagsToAttributes; 
 	
 	// Vital Attributes
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category="Vital Attributes")
@@ -160,4 +167,9 @@ private:
 	static void SetEffectSourceProperties(const FGameplayEffectContextHandle& EffectContextHandle, FEffectCharacterProperties& CharacterProperties);
 	static void SetEffectTargetProperties(const FGameplayEffectModCallbackData& Data, FEffectCharacterProperties& CharacterProperties);
 	static void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& EffectProperties);
+
+	void AddDelegatesToList();
+	void AddVitalDelegatesToList(const FAuraGameplayTags& GameplayTags);
+	void AddPrimaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
+	void AddSecondaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
 };
