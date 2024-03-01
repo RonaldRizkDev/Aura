@@ -19,7 +19,13 @@ public:
 	virtual void CreateActorHighlight() override;
 	virtual void RemoveActorHighlight() override;
 
+	//Combat Interface
+	FORCEINLINE virtual int32 GetPLayerLevel() const override { return Level; }
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
+	int32 Level = 1;
 };

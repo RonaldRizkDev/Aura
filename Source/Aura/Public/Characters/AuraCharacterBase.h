@@ -7,19 +7,27 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 UCLASS(Abstract)
-class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface
+class AURA_API AAuraCharacterBase
+	: public ACharacter,
+		public IAbilitySystemInterface,
+		public ICombatInterface
 {
 	GENERATED_BODY()
 
 public:
 	AAuraCharacterBase();
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual int32 GetPLayerLevel() const override;
+	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	
 protected:
@@ -35,7 +43,20 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	void InitializeDefaultAttributes() const;
+
 private:
 	const FName WeaponName = "Weapon";
 	const FName WeaponHandSocketName = "WeaponHandSocket";
+
+	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const;
 };

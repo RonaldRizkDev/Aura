@@ -1,7 +1,7 @@
 // Copyright Silver Desert Software
 
 
-#include "..\..\Public\Characters\EnemyCharacter.h"
+#include "Characters/EnemyCharacter.h"
 
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
