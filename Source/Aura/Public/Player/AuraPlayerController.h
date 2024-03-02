@@ -31,6 +31,8 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
+	FHitResult CursorHit;
+	
 	TObjectPtr<IHighlightInterface> CurrentActor;
 
 	UPROPERTY(EditAnywhere, Category="Input")
@@ -46,6 +48,8 @@ private:
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
+
+	void AutoRun();
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
