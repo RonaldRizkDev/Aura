@@ -4,8 +4,10 @@
 #include "Player/AuraPlayerController.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTags.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Components/SplineComponent.h"
 #include "Input/AuraInputComponent.h"
 #include "Interfaces/HighlightInterface.h"
 
@@ -13,6 +15,8 @@ AAuraPlayerController::AAuraPlayerController()
 {
 	CurrentActor = nullptr;
 	bReplicates = true;
+
+	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
@@ -103,17 +107,48 @@ void AAuraPlayerController::CursorTrace()
 	}
 }
 
-void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+void AAuraPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
 {
+	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB) == false)
+	{
+		return;
+	}
+	
+	bTargeting = CurrentActor != nullptr;
+	bAutoRunning = false;
 }
 
-void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 {
-	if (GetAsc() == nullptr) return;
-	GetAsc()->AbilityInputTagHeld(InputTag);
+	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB) == false)
+	{
+		if (GetAsc() == nullptr) return;
+		GetAsc()->AbilityInputTagHeld(InputTag);
+		return;
+	}
+
+	if (bTargeting)
+	{
+		if (GetAsc() == nullptr) return;
+		GetAsc()->AbilityInputTagHeld(InputTag);
+		return;
+	}
+
+	FollowTime += GetWorld()->GetDeltaSeconds();
+
+	if (FHitResult Hit; GetHitResultUnderCursor(ECC_Vehicle, false, Hit))
+	{
+		CachedDestination = Hit.ImpactPoint;
+	}
+
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		const FVector WorldDestination = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
+		ControlledPawn->AddMovementInput(WorldDestination);
+	}
 }
 
-void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 {
 	if (GetAsc() == nullptr) return;
 	GetAsc()->AbilityInputTagReleased(InputTag);
