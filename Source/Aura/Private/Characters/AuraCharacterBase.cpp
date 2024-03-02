@@ -40,6 +40,14 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
+void AAuraCharacterBase::AddCharacterAbilities()
+{
+	if (!HasAuthority()) return;
+
+	UAuraAbilitySystemComponent* AuraAsc = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	AuraAsc->AddCharacterAbilities(StartupAbilities);
+}
+
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const
 {
 	check(IsValid(GetAbilitySystemComponent()));

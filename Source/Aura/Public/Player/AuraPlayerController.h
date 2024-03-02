@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-// #include "Interfaces/HighlightInterface.h"
+#include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
+class UAuraAbilitySystemComponent;
+class UAuraInputConfig;
 class UInputMappingContext;
 class UInputAction;
 class IHighlightInterface;
@@ -29,7 +31,6 @@ protected:
 
 private:
 	TObjectPtr<IHighlightInterface> CurrentActor;
-	//IHighlightInterface* LastActor;
 
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
@@ -40,4 +41,16 @@ private:
 	void Move(const struct FInputActionValue& InputActionValue);
 
 	void CursorTrace();
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UAuraInputConfig> InputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UAuraAbilitySystemComponent* GetAsc();
 };

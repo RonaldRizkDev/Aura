@@ -53,10 +53,14 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	void InitializeDefaultAttributes() const;
-
+	void AddCharacterAbilities();
+	
 private:
 	const FName WeaponName = "Weapon";
 	const FName WeaponHandSocketName = "WeaponHandSocket";
 
+	UPROPERTY(EditAnywhere, Category="Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
 	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const;
 };
