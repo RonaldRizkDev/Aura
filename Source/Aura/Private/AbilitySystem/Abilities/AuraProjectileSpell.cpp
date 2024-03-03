@@ -5,27 +5,24 @@
 
 #include "Actor/AuraProjectile.h"
 #include "Interfaces/CombatInterface.h"
-#include "Kismet/KismetSystemLibrary.h"
 
-void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-                                           const FGameplayEventData* TriggerEventData)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectionTargetLocation)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	const bool bIsServer = HasAuthority(&ActivationInfo);
-	if (bIsServer == false) return;
-
+	if (GetAvatarActorFromActorInfo()->HasAuthority() == false) return;
+	
 	ICombatInterface *CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	if (CombatInterface == nullptr)
 	{
 		return;
 	}
-
+	
 	const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+	FRotator Rotation = (ProjectionTargetLocation - SocketLocation).Rotation();
+	Rotation.Pitch = 0.f;
 	
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);
+	SpawnTransform.SetRotation(Rotation.Quaternion());
 	
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
@@ -33,8 +30,8 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 		GetOwningActorFromActorInfo(),
 		Cast<APawn>(GetOwningActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
+	
 	// Give the projectile a gameplay effect spec for causing damage
-
+	
 	Projectile->FinishSpawning(SpawnTransform);
 }

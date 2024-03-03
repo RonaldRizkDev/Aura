@@ -57,7 +57,9 @@ void AAuraPlayerController::SetupInputComponent()
 
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
-
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
+	
 	AuraInputComponent->BindAbilityActions(InputConfig, this,
 		&ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
@@ -78,6 +80,16 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	}
 }
 
+void AAuraPlayerController::ShiftPressed()
+{
+	bShiftKeyDown = true;
+}
+
+void AAuraPlayerController::ShiftReleased()
+{
+	bShiftKeyDown = false;
+}
+
 void AAuraPlayerController::CursorTrace()
 {	
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
@@ -94,28 +106,6 @@ void AAuraPlayerController::CursorTrace()
 
 	if (LastActor) LastActor->RemoveActorHighlight();
 	if (CurrentActor) CurrentActor->CreateActorHighlight();
-
-	// if (LastActor == nullptr)
-	// {
-	// 	if (CurrentActor != nullptr)
-	// 	{
-	// 		CurrentActor->CreateActorHighlight();
-	// 	}
-	//
-	// 	return;
-	// }
-	//
-	// if (CurrentActor == nullptr)
-	// {
-	// 	LastActor->RemoveActorHighlight();
-	// 	return;
-	// }
-	//
-	// if (LastActor != CurrentActor)
-	// {
-	// 	CurrentActor->CreateActorHighlight();
-	// 	LastActor->RemoveActorHighlight();
-	// }
 }
 
 void AAuraPlayerController::AbilityInputTagPressed(const FGameplayTag InputTag)
@@ -138,7 +128,7 @@ void AAuraPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting)
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetAsc() == nullptr) return;
 		GetAsc()->AbilityInputTagHeld(InputTag);
