@@ -58,7 +58,7 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	void InitializeDefaultAttributes() const;
-	void AddCharacterAbilities();
+	void AddCharacterAbilities() const;
 	
 private:
 	const FName WeaponName = "Weapon";
