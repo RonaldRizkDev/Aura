@@ -5,7 +5,12 @@
 #include "CoreMinimal.h"
 #include "Characters/AuraCharacterBase.h"
 #include "Interfaces/HighlightInterface.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
 #include "EnemyCharacter.generated.h"
+
+class UWidgetComponent;
+
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 
 UCLASS()
 class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IHighlightInterface
@@ -28,4 +33,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
 	int32 Level = 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+private:
+	void ConfigureHealthBar();
 };
