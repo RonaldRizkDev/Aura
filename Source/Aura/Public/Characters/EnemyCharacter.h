@@ -27,7 +27,9 @@ public:
 
 	//Combat Interface
 	FORCEINLINE virtual int32 GetPLayerLevel() const override { return Level; }
-	
+
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
@@ -47,6 +49,12 @@ protected:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = false;
 
 private:
 	void ConfigureHealthBar();

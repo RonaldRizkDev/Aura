@@ -3,10 +3,12 @@
 
 #include "Characters/EnemyCharacter.h"
 
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AruaAbilitySystemFunctionLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
 
 AEnemyCharacter::AEnemyCharacter()
@@ -47,17 +49,25 @@ void AEnemyCharacter::RemoveActorHighlight()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed; 
+}
+
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	InitAbilityActorInfo();
-
+	
 	ConfigureHealthBar();
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()
 {
+	BaseWalkSpeed = GetCharacterMovement()->MaxWalkSpeed; 
+
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
@@ -67,6 +77,7 @@ void AEnemyCharacter::InitAbilityActorInfo()
 void AEnemyCharacter::InitializeDefaultAttributes() const
 {
 	UAruaAbilitySystemFunctionLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+	UAruaAbilitySystemFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 }
 
 void AEnemyCharacter::ConfigureHealthBar()
@@ -92,6 +103,10 @@ void AEnemyCharacter::ConfigureHealthBar()
 		{
 			OnMaxHealthChanged.Broadcast(Data.NewValue);
 		});
+
+	AbilitySystemComponent->RegisterGameplayTagEvent(
+		FAuraGameplayTags::Get().Effect_HitReact,
+		EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AEnemyCharacter::HitReactTagChanged);
 
 	OnHealthChanged.Broadcast(AuraAttrSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttrSet->GetMaxHealth());

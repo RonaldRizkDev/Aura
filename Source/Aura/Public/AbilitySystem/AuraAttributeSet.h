@@ -177,5 +177,5 @@ private:
 	void AddPrimaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
 	void AddSecondaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
 
-	void ProcessDamage(const FGameplayEffectModCallbackData& Data);
+	void ProcessDamage(const FGameplayEffectModCallbackData& Data, FEffectProperties EffectProperties);
 };

@@ -61,6 +61,11 @@ void AAuraCharacterBase::AddCharacterAbilities() const
 	AuraAsc->AddCharacterAbilities(StartupAbilities);
 }
 
+UAnimMontage* AAuraCharacterBase::GetHitReactionMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const
 {
 	check(IsValid(GetAbilitySystemComponent()));

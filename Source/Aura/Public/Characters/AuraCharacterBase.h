@@ -10,6 +10,7 @@
 #include "Interfaces/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UAnimMontage;
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
@@ -59,6 +60,8 @@ protected:
 
 	virtual void InitializeDefaultAttributes() const;
 	void AddCharacterAbilities() const;
+
+	virtual UAnimMontage* GetHitReactionMontage_Implementation() override;
 	
 private:
 	const FName WeaponName = "Weapon";
@@ -66,6 +69,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 	
 	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const;
 };

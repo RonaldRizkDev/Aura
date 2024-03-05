@@ -178,10 +178,10 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		SetMana(FMath::Clamp(GetMana(), 0, GetMaxMana()));
 	}
 
-	ProcessDamage(Data);
+	ProcessDamage(Data, EffectProperties);
 }
 
-void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data)
+void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data, FEffectProperties EffectProperties)
 {
 	if (Data.EvaluatedData.Attribute != GetIncomingDamageAttribute())
 	{
@@ -197,7 +197,12 @@ void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data
 
 	const float NewHealth = GetHealth() - LocalIncomingDamage;
 	SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-	const bool bFatal = NewHealth <= 0;
+
+	if (NewHealth <= 0) return;
+
+	FGameplayTagContainer TagContainer;
+	TagContainer.AddTag(FAuraGameplayTags::Get().Effect_HitReact);
+	EffectProperties.Target.AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
 }
 
 
