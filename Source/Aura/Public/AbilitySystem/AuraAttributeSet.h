@@ -127,6 +127,10 @@ public:
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
 
+	// Meta Attributes
+	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
 	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
@@ -172,4 +176,6 @@ private:
 	void AddVitalDelegatesToList(const FAuraGameplayTags& GameplayTags);
 	void AddPrimaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
 	void AddSecondaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
+
+	void ProcessDamage(const FGameplayEffectModCallbackData& Data);
 };

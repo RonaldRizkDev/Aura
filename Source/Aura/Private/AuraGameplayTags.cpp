@@ -77,4 +77,8 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_RMB = UGameplayTagsManager::Get()
 		.AddNativeGameplayTag(FName("InputTag.RMB"),
 					FString(""));
+
+	GameplayTags.Damage = UGameplayTagsManager::Get()
+		.AddNativeGameplayTag(FName("Damage"),
+					FString(""));
 }
