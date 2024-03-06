@@ -11,6 +11,8 @@
 #include "Net/UnrealNetwork.h"
 #include "AuraGameplayTags.h"
 #include "Interfaces/CombatInterface.h"
+#include "kismet/GameplayStatics.h"
+#include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -182,7 +184,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	ProcessDamage(Data, EffectProperties);
 }
 
-void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data, FEffectProperties EffectProperties)
+void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data, const FEffectProperties& EffectProperties)
 {
 	if (Data.EvaluatedData.Attribute != GetIncomingDamageAttribute())
 	{
@@ -205,13 +207,26 @@ void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data
 		{
 			CombatInterface->Die();
 		}
-		
+
+		SetDamageText(LocalIncomingDamage, EffectProperties);
 		return;
 	}
 
 	FGameplayTagContainer TagContainer;
 	TagContainer.AddTag(FAuraGameplayTags::Get().Effect_HitReact);
 	EffectProperties.Target.AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
+
+	SetDamageText(LocalIncomingDamage, EffectProperties);
+}
+
+void UAuraAttributeSet::SetDamageText(const float Damage, const FEffectProperties& EffectProperties) const
+{
+	if (EffectProperties.Target.Character == EffectProperties.Source.Character) return;
+
+	AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(EffectProperties.Source.Character, 0));
+	if (PlayerController == nullptr) return;
+
+	PlayerController->ShowDamageNumber(Damage, EffectProperties.Target.Character);
 }
 
 
