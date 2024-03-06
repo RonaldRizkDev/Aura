@@ -24,7 +24,8 @@ public:
 	// Highlight interface
 	virtual void CreateActorHighlight() override;
 	virtual void RemoveActorHighlight() override;
-
+	virtual void Die() override;
+	
 	//Combat Interface
 	FORCEINLINE virtual int32 GetPLayerLevel() const override { return Level; }
 
@@ -54,7 +55,10 @@ protected:
 	bool bHitReacting = false;
 
 	UPROPERTY(BlueprintReadOnly, Category="Combat")
-	float BaseWalkSpeed = false;
+	float BaseWalkSpeed = 500.f;
+
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	float LifeSpan = 5.f;
 
 private:
 	void ConfigureHealthBar();

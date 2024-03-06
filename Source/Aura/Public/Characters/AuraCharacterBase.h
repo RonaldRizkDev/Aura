@@ -28,6 +28,10 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual int32 GetPLayerLevel() const override;
+	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void HandleDeath();
 	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 	

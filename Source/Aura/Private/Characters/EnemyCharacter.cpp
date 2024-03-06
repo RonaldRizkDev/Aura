@@ -49,6 +49,12 @@ void AEnemyCharacter::RemoveActorHighlight()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+void AEnemyCharacter::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+}
+
 void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
