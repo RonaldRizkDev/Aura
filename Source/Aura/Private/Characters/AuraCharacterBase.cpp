@@ -35,10 +35,10 @@ int32 AAuraCharacterBase::GetPLayerLevel() const
 void AAuraCharacterBase::Die()
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-	HandleDeath();
+	MulticastHandleDeath();
 }
 
-void AAuraCharacterBase::HandleDeath_Implementation()
+void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 {
 	Weapon->SetSimulatePhysics(true);;
 	Weapon->SetEnableGravity(true);
@@ -50,6 +50,8 @@ void AAuraCharacterBase::HandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	Dissolve();
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -86,6 +88,12 @@ UAnimMontage* AAuraCharacterBase::GetHitReactionMontage_Implementation()
 	return HitReactMontage;
 }
 
+void AAuraCharacterBase::Dissolve()
+{
+	DissolveCharacter();
+	DissolveWeapon();
+}
+
 void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffect, const float Level) const
 {
 	check(IsValid(GetAbilitySystemComponent()));
@@ -97,4 +105,23 @@ void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> Ga
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffect, Level, ContextHandle);
 
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());	
+}
+
+void AAuraCharacterBase::DissolveCharacter()
+{
+	if (IsValid(DissolveMaterialInstance) == false) return;
+
+	UMaterialInstanceDynamic *DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+	GetMesh()->SetMaterial(0, DynamicMatInst);
+
+	StartDissolveTimeline(DynamicMatInst);
+}
+
+void AAuraCharacterBase::DissolveWeapon()
+{
+	if (IsValid(WeaponDissolveMaterialInstance) == false) return;
+	UMaterialInstanceDynamic *WeaponDynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+	Weapon->SetMaterial(0, WeaponDynamicMatInst);
+
+	StartWeaponDissolveTimeline(WeaponDynamicMatInst);
 }
