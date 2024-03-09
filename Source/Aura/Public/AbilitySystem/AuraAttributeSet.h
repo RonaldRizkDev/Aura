@@ -178,5 +178,5 @@ private:
 	void AddSecondaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
 
 	void ProcessDamage(const FGameplayEffectModCallbackData& Data, const FEffectProperties& EffectProperties);
-	void SetDamageText(const float Damage, const FEffectProperties& EffectProperties) const;
+	static void SetDamageText(const float Damage, const FEffectProperties& EffectProperties);
 };

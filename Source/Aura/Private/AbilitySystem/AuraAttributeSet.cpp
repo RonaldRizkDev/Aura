@@ -219,7 +219,7 @@ void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data
 	SetDamageText(LocalIncomingDamage, EffectProperties);
 }
 
-void UAuraAttributeSet::SetDamageText(const float Damage, const FEffectProperties& EffectProperties) const
+void UAuraAttributeSet::SetDamageText(const float Damage, const FEffectProperties& EffectProperties)
 {
 	if (EffectProperties.Target.Character == EffectProperties.Source.Character) return;
 
