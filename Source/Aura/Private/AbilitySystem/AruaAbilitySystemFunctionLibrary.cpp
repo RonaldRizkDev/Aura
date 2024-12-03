@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/AruaAbilitySystemFunctionLibrary.h"
 
+#include "AuraAbilityTypes.h"
 #include "Game/AuraGameModeBase.h"
 #include "kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
@@ -77,6 +78,18 @@ UCharacterClassInfo* UAruaAbilitySystemFunctionLibrary::GetCharacterClassInfo(co
 	const AAuraGameModeBase *AuraGameMode = Cast<AAuraGameModeBase>(
 		UGameplayStatics::GetGameMode(WorldContextObject));
 	return AuraGameMode == nullptr ? nullptr : AuraGameMode->CharacterClassInfo;
+}
+
+bool UAruaAbilitySystemFunctionLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FAuraGameplayEffectContext *AuraEffectContext = static_cast<const FAuraGameplayEffectContext *>(EffectContextHandle.Get());
+	return AuraEffectContext ? AuraEffectContext->IsBlockedHit() : false;
+}
+
+bool UAruaAbilitySystemFunctionLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	const FAuraGameplayEffectContext *AuraEffectContext = static_cast<const FAuraGameplayEffectContext *>(EffectContextHandle.Get());
+	return AuraEffectContext ? AuraEffectContext->IsCriticalHit() : false;
 }
 
 FWidgetControllerParams* UAruaAbilitySystemFunctionLibrary::GetHUDAndParams(

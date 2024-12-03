@@ -4,6 +4,7 @@
 #include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraAbilityTypes.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AruaAbilitySystemFunctionLibrary.h"
 #include "AbilitySystem/AuraAttributeSet.h"
@@ -92,13 +93,18 @@ void UExecCalc_Damage::Execute_Implementation(
 	const FRealCurve *CriticalHitMultiplierCurve = CharacterClassInfo->DamageCalculationsCoefficients->FindCurve(FName("CriticalHitMultiplier"), FString());
 	const float CriticalHitMultiplierCoefficient = CriticalHitMultiplierCurve->Eval(TargetLevel);
 
+	// Get Aura Gameplay Effect Context Handle
+	FAuraGameplayEffectContext *AuraContext = static_cast<FAuraGameplayEffectContext *>(Spec.GetContext().Get());
+	
 	// get Damage amount
 	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
 	
 	float TargetBlockChance = 0;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance);
 	TargetBlockChance = FMath::Max<float>(0.f, TargetBlockChance);
-	if (TargetBlockChance > (rand() % 100)) Damage *= BlockedDamageCoefficient;
+	const bool IsBlockedHit = TargetBlockChance > (rand() % 100);
+	if (IsBlockedHit) Damage *= BlockedDamageCoefficient;
+	AuraContext->SetBlockedHit(IsBlockedHit);
 	
 	float SourceArmorPenetration = 0;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration);
@@ -120,7 +126,9 @@ void UExecCalc_Damage::Execute_Implementation(
 	TargetCriticalHitResistance = FMath::Max<float>(0.f, TargetCriticalHitResistance);
 
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
-	if (EffectiveCriticalHitChance > FMath::RandRange(1, 100)) Damage = Damage * CriticalHitMultiplierCoefficient + SourceCriticalHitDamage; 
+	const bool IsCriticalHit = EffectiveCriticalHitChance > FMath::RandRange(1, 100);
+	if (IsCriticalHit) Damage = Damage * CriticalHitMultiplierCoefficient + SourceCriticalHitDamage; 
+	AuraContext->SetCriticalHit(IsCriticalHit);
 	
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);

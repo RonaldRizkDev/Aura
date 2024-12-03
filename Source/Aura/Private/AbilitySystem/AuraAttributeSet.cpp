@@ -10,6 +10,7 @@
 
 #include "Net/UnrealNetwork.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystem/AruaAbilitySystemFunctionLibrary.h"
 #include "Interfaces/CombatInterface.h"
 #include "kismet/GameplayStatics.h"
 #include "Player/AuraPlayerController.h"
@@ -221,12 +222,15 @@ void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data
 
 void UAuraAttributeSet::SetDamageText(const float Damage, const FEffectProperties& EffectProperties)
 {
+	const bool bBlockedHit = UAruaAbilitySystemFunctionLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
+	const bool bCriticalHit = UAruaAbilitySystemFunctionLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
+	
 	if (EffectProperties.Target.Character == EffectProperties.Source.Character) return;
 
 	AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(EffectProperties.Source.Character, 0));
 	if (PlayerController == nullptr) return;
 
-	PlayerController->ShowDamageNumber(Damage, EffectProperties.Target.Character);
+	PlayerController->ShowDamageNumber(Damage, EffectProperties.Target.Character, bBlockedHit, bCriticalHit);
 }
 
 

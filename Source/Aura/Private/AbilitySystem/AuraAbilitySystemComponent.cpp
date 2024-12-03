@@ -21,7 +21,7 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 			continue;
 		}
 		
-		AbilitySpec.DynamicAbilityTags.AddTag(AuraAbility->StartupInputTag);
+		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AuraAbility->StartupInputTag);
 		GiveAbility(AbilitySpec);
 		//		GiveAbilityAndActivateOnce(AbilitySpec);
 	}
@@ -33,7 +33,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputT
 
 	for(FGameplayAbilitySpec &AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) == false)
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag) == false)
 		{
 			continue;
 		}
@@ -54,7 +54,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 
 	for(FGameplayAbilitySpec &AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) == false)
+		if (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag) == false)
 		{
 			continue;
 		}

@@ -32,7 +32,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void AAuraPlayerController::ShowDamageNumber_Implementation(const float Damage, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDamageNumber_Implementation(const float Damage, ACharacter* TargetCharacter, const bool bBlockedHit, const bool bCriticalHit)
 {
 	if (IsValid(TargetCharacter) == false || DamageTextComponentClass == nullptr) return;
 
@@ -40,7 +40,7 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(const float Damage, 
 	DamageText->RegisterComponent();
 	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-	DamageText->SetDamageText(Damage);
+	DamageText->SetDamageText(Damage, bBlockedHit, bCriticalHit);
 }
 
 void AAuraPlayerController::BeginPlay()
