@@ -127,6 +127,26 @@ public:
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxMana);
 
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, FireResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArcaneResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData ArcaneResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArcaneResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, LightningResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData PhysicalResistance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, PhysicalResistance);
+
+
+
+
 	// Meta Attributes
 	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes")
 	FGameplayAttributeData IncomingDamage;
@@ -166,6 +186,14 @@ public:
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const;
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldResistance) const;
+	UFUNCTION()
+	void OnRep_ArcaneResistance(const FGameplayAttributeData& OldResistance) const;
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldResistance) const;
+	UFUNCTION()
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldResistance) const;
 
 private:
 	static void SetEffectSourceProperties(const FGameplayEffectContextHandle& EffectContextHandle, FEffectCharacterProperties& CharacterProperties);
@@ -176,6 +204,7 @@ private:
 	void AddVitalDelegatesToList(const FAuraGameplayTags& GameplayTags);
 	void AddPrimaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
 	void AddSecondaryDelegatesToList(const FAuraGameplayTags& GameplayTags);
+	void AddResistanceDelegatesToList(const FAuraGameplayTags& GameplayTags);
 
 	void ProcessDamage(const FGameplayEffectModCallbackData& Data, const FEffectProperties& EffectProperties);
 	static void SetDamageText(const float Damage, const FEffectProperties& EffectProperties);
