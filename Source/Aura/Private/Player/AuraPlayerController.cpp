@@ -203,7 +203,7 @@ void AAuraPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 	}
 
 	const int NumPathCnt = NavPath->PathPoints.Num();;
-	if (NumPathCnt > 1)
+	if (NumPathCnt > 0)
 	{
 		CachedDestination = NavPath->PathPoints[NumPathCnt - 1];
 	}
