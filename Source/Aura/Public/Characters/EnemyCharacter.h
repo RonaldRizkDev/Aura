@@ -10,6 +10,8 @@
 #include "EnemyCharacter.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class AAuraAIController;
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 
@@ -25,7 +27,8 @@ public:
 	virtual void CreateActorHighlight() override;
 	virtual void RemoveActorHighlight() override;
 	virtual void Die() override;
-	
+	virtual void PossessedBy(AController* NewController) override;
+
 	//Combat Interface
 	FORCEINLINE virtual int32 GetPLayerLevel() const override { return Level; }
 
@@ -35,6 +38,12 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
 	virtual void InitializeDefaultAttributes() const override;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
 	int32 Level = 1;
