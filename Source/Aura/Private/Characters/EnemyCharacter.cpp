@@ -77,6 +77,11 @@ void AEnemyCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
+	if (HasAuthority() == false)
+	{
+		return;
+	}
+
 	InitializeDefaultAttributes();
 }
 

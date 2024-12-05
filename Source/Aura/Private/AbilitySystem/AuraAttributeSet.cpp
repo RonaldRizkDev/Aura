@@ -12,7 +12,6 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AruaAbilitySystemFunctionLibrary.h"
 #include "Interfaces/CombatInterface.h"
-#include "kismet/GameplayStatics.h"
 #include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
@@ -242,7 +241,8 @@ void UAuraAttributeSet::SetDamageText(const float Damage, const FEffectPropertie
 	
 	if (EffectProperties.Target.Character == EffectProperties.Source.Character) return;
 
-	AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(EffectProperties.Source.Character, 0));
+	AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(EffectProperties.Source.Character->Controller);
+		//Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(EffectProperties.Source.Character, 0));
 	if (PlayerController == nullptr) return;
 
 	PlayerController->ShowDamageNumber(Damage, EffectProperties.Target.Character, bBlockedHit, bCriticalHit);
