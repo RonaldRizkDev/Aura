@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Characters/AuraCharacterBase.h"
-#include "Interfaces/HighlightInterface.h"
+#include "Interfaces/EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "EnemyCharacter.generated.h"
 
@@ -16,7 +16,7 @@ class AAuraAIController;
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 
 UCLASS()
-class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IHighlightInterface
+class AURA_API AEnemyCharacter : public AAuraCharacterBase, public IEnemyInterface
 {
 	GENERATED_BODY()
 	

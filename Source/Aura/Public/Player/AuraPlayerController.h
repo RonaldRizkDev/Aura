@@ -13,7 +13,7 @@ class UAuraAbilitySystemComponent;
 class UAuraInputConfig;
 class UInputMappingContext;
 class UInputAction;
-class IHighlightInterface;
+class IEnemyInterface;
 class ACharacter;
 
 /**
@@ -38,7 +38,7 @@ protected:
 private:
 	FHitResult CursorHit;
 	
-	TObjectPtr<IHighlightInterface> CurrentActor;
+	TObjectPtr<IEnemyInterface> CurrentActor;
 
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputMappingContext> AuraContext;

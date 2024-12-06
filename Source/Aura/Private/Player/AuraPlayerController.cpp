@@ -12,7 +12,7 @@
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
-#include "Interfaces/HighlightInterface.h"
+#include "Interfaces/EnemyInterface.h"
 #include "UI/Widget/DamageTextComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -109,8 +109,8 @@ void AAuraPlayerController::CursorTrace()
 
 	if (!CursorHit.bBlockingHit) return;
 
-	const TObjectPtr<IHighlightInterface> LastActor = CurrentActor;
-	CurrentActor = Cast<IHighlightInterface>(CursorHit.GetActor());
+	const TObjectPtr<IEnemyInterface> LastActor = CurrentActor;
+	CurrentActor = Cast<IEnemyInterface>(CursorHit.GetActor());
 
 	if (LastActor == CurrentActor)
 	{
