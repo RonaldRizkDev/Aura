@@ -84,8 +84,19 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
-	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed; 
-	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	if (AuraAIController == nullptr)
+	{
+		return;
+	}
+
+	UBlackboardComponent* Blackboard = AuraAIController->GetBlackboardComponent();
+	if (Blackboard == nullptr)
+	{
+		return;
+	}
+
+	Blackboard->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AEnemyCharacter::BeginPlay()
