@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include<string>
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
@@ -37,7 +36,9 @@ public:
 	virtual void MulticastHandleDeath();
 	
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
-	
+
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() const override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo();;
@@ -45,10 +46,19 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-	UPROPERTY(EditAnywhere, Category="Combat")
+	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 
-	virtual FVector GetCombatSocketLocation_Implementation() override;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName RightHandSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName LeftHandSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
+
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
