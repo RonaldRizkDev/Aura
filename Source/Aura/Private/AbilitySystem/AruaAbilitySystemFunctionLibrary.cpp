@@ -10,6 +10,7 @@
 #include "Player/AuraPlayerState.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "UI/HUD/AuraHUD.h"
+#include <Engine/OverlapResult.h>
 
 UOverlayWidgetController* UAruaAbilitySystemFunctionLibrary::GetOverlayWidgetController(
 	const UObject* WorldContextObject)
