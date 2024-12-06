@@ -27,6 +27,9 @@ public:
 	AAuraCharacterBase();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+
 	virtual int32 GetPLayerLevel() const override;
 	virtual void Die() override;
 
@@ -45,7 +48,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	FName WeaponTipSocketName;
 
-	virtual FVector GetCombatSocketLocation() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
 	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -79,6 +82,9 @@ protected:
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	bool bDead = false;
+
 private:
 	const FName WeaponName = "Weapon";
 	const FName WeaponHandSocketName = "WeaponHandSocket";

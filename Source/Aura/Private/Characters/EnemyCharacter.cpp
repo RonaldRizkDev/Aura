@@ -115,7 +115,17 @@ void AEnemyCharacter::InitAbilityActorInfo()
 void AEnemyCharacter::InitializeDefaultAttributes() const
 {
 	UAruaAbilitySystemFunctionLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
-	UAruaAbilitySystemFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+	UAruaAbilitySystemFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
+}
+
+void AEnemyCharacter::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AEnemyCharacter::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
 }
 
 void AEnemyCharacter::ConfigureHealthBar()

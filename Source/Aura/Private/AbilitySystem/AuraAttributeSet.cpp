@@ -236,15 +236,17 @@ void UAuraAttributeSet::ProcessDamage(const FGameplayEffectModCallbackData& Data
 
 void UAuraAttributeSet::SetDamageText(const float Damage, const FEffectProperties& EffectProperties)
 {
-	const bool bBlockedHit = UAruaAbilitySystemFunctionLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
-	const bool bCriticalHit = UAruaAbilitySystemFunctionLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
-	
 	if (EffectProperties.Target.Character == EffectProperties.Source.Character) return;
 
 	AAuraPlayerController* PlayerController = Cast<AAuraPlayerController>(EffectProperties.Source.Character->Controller);
-		//Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(EffectProperties.Source.Character, 0));
-	if (PlayerController == nullptr) return;
+	if (PlayerController == nullptr)
+	{
+		PlayerController = Cast<AAuraPlayerController>(EffectProperties.Target.Character->Controller);
+		if (PlayerController == nullptr) return;
+	}
 
+	const bool bBlockedHit = UAruaAbilitySystemFunctionLibrary::IsBlockedHit(EffectProperties.EffectContextHandle);
+	const bool bCriticalHit = UAruaAbilitySystemFunctionLibrary::IsCriticalHit(EffectProperties.EffectContextHandle);
 	PlayerController->ShowDamageNumber(Damage, EffectProperties.Target.Character, bBlockedHit, bCriticalHit);
 }
 

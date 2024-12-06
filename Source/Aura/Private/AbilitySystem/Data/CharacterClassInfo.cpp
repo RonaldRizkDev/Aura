@@ -2,9 +2,8 @@
 
 
 #include "AbilitySystem/Data/CharacterClassInfo.h"
-#include "GameplayEffect.h"
 
-FCharacterClassDefaultInfo UCharacterClassInfo::GetDefaultClassInfo(ECharacterClass CharacterClass)
+FCharacterClassDefaultInfo UCharacterClassInfo::GetClassDefaultInfo(const ECharacterClass CharacterClass) const
 {
 	return CharacterClassInformation.FindChecked(CharacterClass);
 }
